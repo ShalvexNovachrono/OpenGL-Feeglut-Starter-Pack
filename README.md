@@ -1,9 +1,7 @@
 # OpenGL Freeglut Starter Pack
-
 A lightweight C++ starter template for OpenGL development using Freeglut. This project provides a pre-configured environment with window management, a custom math library, and utility macros to jumpstart your OpenGL projects.
 
 ## Where to Write Your Code
-
 Most of your development will happen in `Renderer-Window.cpp`. Here are the key methods you should use:
 
 ### 1. Initialization (`Start`)
@@ -46,4 +44,3 @@ Handle user input in the following methods:
 2. Open `OpenGL-Feeglut-Starter-Pack.sln` in Visual Studio.
 3. Ensure the configuration is set to `Debug x86` or `Release x86` and the platform matches the library.
 4. Build and Run (F5).
-
