@@ -36,6 +36,8 @@ Handle user input in the following methods:
 - `MouseMotion`: For mouse movement while a button is held.
 - `MousePassiveMotion`: For mouse movement without buttons held.
 - `MouseScrollwheel`: For scroll wheel events.
+- `Keyboard(unsigned int key, int x, int y)`: For regular keyboard key presses (letters, numbers, symbols, space, etc.).
+- `KeyboardSpecial(int key, int x, int y)`: For special keyboard keys (function keys, arrow keys, page up/down, home, end, etc.).
 
 ## Getting Started
 
