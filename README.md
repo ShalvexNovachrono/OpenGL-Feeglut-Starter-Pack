@@ -1,61 +1,49 @@
-# OpenGL - FreeGLUT STARTER
+# OpenGL Freeglut Starter Pack
 
-## Overview
-This project initialises an OpenGL rendering environment using GLUT/FreeGLUT. The `OpenGLRenderer.cpp` file contains the setup and main loop of the renderer. If you want to modify or extend the rendering logic, read below to see where to insert your code.
+A lightweight C++ starter template for OpenGL development using Freeglut. This project provides a pre-configured environment with window management, a custom math library, and utility macros to jumpstart your OpenGL projects.
 
 ## Where to Write Your Code
 
-### Rendering Logic
-To add your own drawing logic, modify the `Display` function in `OpenGLRenderer.cpp`:
+Most of your development will happen in `Renderer-Window.cpp`. Here are the key methods you should use:
+
+### 1. Initialization (`Start`)
+Use the `Start()` method for any setup that needs to happen once when the application begins (e.g., loading textures, initializing game objects).
 ```cpp
-void OpenGLRenderer::Display() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glLoadIdentity();
-    
-    // Add your rendering code here
-    
-    glFlush();
+void RendererWindow::Start() {
+    // Your initialization code here
+}
+```
+
+### 2. Update Logic (`Timer`)
+The `Timer()` method is called every frame. Use this for physics, movement, and logic updates. You can use `deltaTime` for frame-independent movement.
+```cpp
+void RendererWindow::Timer() {
+    // Your update logic here (e.g., position += velocity * deltaTime)
+}
+```
+
+### 3. Rendering (`Draw`)
+The `Draw()` method is where all your OpenGL drawing commands should go. It is called every time the window needs to be redrawn.
+```cpp
+void RendererWindow::Draw() const {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+    // Your OpenGL drawing code here
     glutSwapBuffers();
 }
 ```
 
-### Updating Logic
-If you need to update objects (e.g., animations, movement), modify the `Update` function:
-```cpp
-void OpenGLRenderer::Update() {
-    
-    // Add update logic here (e.g., moving objects, handling game logic)
-    
-    LogIt("FPS: " + to_string(1 / DELTA_TIME));
-    Print_Debug_Log();
-    glutPostRedisplay();
-}
-```
+### 4. Input Handling
+Handle user input in the following methods:
+- `MouseClick`: For mouse button presses and releases.
+- `MouseMotion`: For mouse movement while a button is held.
+- `MousePassiveMotion`: For mouse movement without buttons held.
+- `MouseScrollwheel`: For scroll wheel events.
 
-### Using Delta Time
-A `DELTA_TIME` float variable is available for handling frame time differences. Use it to ensure smooth animations and movement.
+## Getting Started
 
-### Debug Logging
-You can log messages using the `LogIt` function:
-```cpp
-LogIt("Your message here");
-```
-To print logs, use:
-```cpp
-Print_Debug_Log();
-```
-
-## Additional Notes
-- Modify `glutCreateWindow("Shalvex Novachrono")` if you want to change the window title.
-- Adjust `WINDOW_WIDTH` and `WINDOW_HEIGHT` to modify the window size.
-- Change `FRAME_RATE` if you want a different frame rate.
-
-## Running the Project
-Ensure you have GLUT installed and compile the project using an OpenGL-compatible compiler. Run the executable to start the rendering loop.
-
----
-
-Now you're ready to customise your OpenGL renderer! 🚀
-
-*This README has been generated using AI. Only this README has been AI-generated; all other code is original.*
+### Setup
+1. Clone the repository.
+2. Open `OpenGL-Feeglut-Starter-Pack.sln` in Visual Studio.
+3. Ensure the configuration is set to `Debug x86` or `Release x86` and the platform matches the library.
+4. Build and Run (F5).
 

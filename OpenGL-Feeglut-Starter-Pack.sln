@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35707.178 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGL - FreeGLUT STARTER", "OpenGL - FreeGLUT STARTER\OpenGL - FreeGLUT STARTER.vcxproj", "{DF56AC5B-F265-4A06-87DE-3A75B07AEBAD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGL-Freeglut-Starter-Pack", "OpenGL-Freeglut-Starter-Pack\OpenGL-Freeglut-Starter-Pack.vcxproj", "{DF56AC5B-F265-4A06-87DE-3A75B07AEBAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

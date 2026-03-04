@@ -22,9 +22,9 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{df56ac5b-f265-4a06-87de-3a75b07aebad}</ProjectGuid>
-    <RootNamespace>OpenGLFreeGLUTRETake</RootNamespace>
+    <RootNamespace>OpenGL-Feeglut-Starter-Pack</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>OpenGL - FreeGLUT STARTER</ProjectName>
+    <ProjectName>OpenGL-Feeglut-Starter-Pack</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -71,6 +71,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <AssemblyName>OpenGL-Feeglut-Starter-Pack</AssemblyName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -128,16 +131,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GLUTCallbacks.cpp" />
+    <ClCompile Include="Glut-Callbacks.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="OpenGLRenderer.cpp" />
-    <ClCompile Include="Vector2D.cpp" />
+    <ClCompile Include="Renderer-Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GLUTCallbacks.h" />
-    <ClInclude Include="math.h" />
-    <ClInclude Include="OpenGLRenderer.h" />
-    <ClInclude Include="Vector2D.h" />
+    <ClInclude Include="Glut-Callbacks.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="Maths.h" />
+    <ClInclude Include="Renderer-Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
