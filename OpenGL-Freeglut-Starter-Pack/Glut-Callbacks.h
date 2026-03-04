@@ -9,5 +9,7 @@ namespace GlutCallbacks {
 	void MouseClick(int button, int state, int x, int y);
 	void MouseMotion(int x, int y);
 	void MousePassiveMotion(int x, int y);
-	void MouseScrollwheel(int button, int scrollDirection, int x, int y);
+	void MouseScrollWheel(int button, int scrollDirection, int x, int y);
+	void Keyboard(unsigned char key, int x, int y);
+	void KeyboardSpecial(int key, int x, int y);
 }

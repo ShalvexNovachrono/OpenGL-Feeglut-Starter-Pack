@@ -14,15 +14,19 @@ void RendererWindow::Init(int argc, char* argv[]) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 
+	// Setting up window size and window name
 	glutInitWindowSize(width, height);
 	glutCreateWindow(title.c_str());
 
+	// Setting up the glut callbacks
 	glutDisplayFunc(GlutCallbacks::Display);
 	glutReshapeFunc(GlutCallbacks::ReshapeWindow);
 	glutMouseFunc(GlutCallbacks::MouseClick);
 	glutMotionFunc(GlutCallbacks::MouseMotion);
 	glutPassiveMotionFunc(GlutCallbacks::MousePassiveMotion);
-	glutMouseWheelFunc(GlutCallbacks::MouseScrollwheel);
+	glutMouseWheelFunc(GlutCallbacks::MouseScrollWheel);
+	glutKeyboardFunc(GlutCallbacks::Keyboard);
+	glutSpecialFunc(GlutCallbacks::KeyboardSpecial);
 	glutTimerFunc(frameTime, GlutCallbacks::Timer, frameTime);
 
 	// Switching camera to projection mode
@@ -94,23 +98,30 @@ void RendererWindow::Draw() const {
 }
 
 void RendererWindow::MouseClick(int button, int state, int x, int y) const {
-
 	
 }
 
 void RendererWindow::MouseMotion(int x, int y) const {
 	
-	
 }
 
 void RendererWindow::MousePassiveMotion(int x, int y) const {
 	
+}
+
+void RendererWindow::MouseScrollWheel(int button, int scrollDirection, int x, int y) const {
 	
 }
 
-void RendererWindow::MouseScrollwheel(int button, int scrollDirection, int x, int y) const {
-	
-	
+void RendererWindow::Keyboard(unsigned char key, int x, int y) const {
+
+}
+
+void RendererWindow::KeyboardSpecial(int key, int x, int y) const {
+	if (key == GLUT_KEY_F1) 
+	{
+		LOG_DEBUG("F1 PRESSED")
+	}
 }
 
 void RendererWindow::ReshapeWindow(const int& width, const int&  height) {

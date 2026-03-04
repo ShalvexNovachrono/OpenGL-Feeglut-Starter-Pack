@@ -81,9 +81,21 @@ namespace GlutCallbacks {
 		}
 	}
 
-	void MouseScrollwheel(int button, int scrollDirection, int x, int y) {
+	void MouseScrollWheel(int button, int scrollDirection, int x, int y) {
 		if (rw_instance != nullptr) {
-			rw_instance->MouseScrollwheel(button, scrollDirection, x, y);
+			rw_instance->MouseScrollWheel(button, scrollDirection, x, y);
+		}
+	}
+
+	void Keyboard(unsigned char key, int x, int y) {
+		if (rw_instance != nullptr) {
+			rw_instance->Keyboard(key, x, y);
+		}
+	}
+	
+	void KeyboardSpecial(int key, int x, int y) {
+		if (rw_instance != nullptr) {
+			rw_instance->KeyboardSpecial(key, x, y);
 		}
 	}
 }

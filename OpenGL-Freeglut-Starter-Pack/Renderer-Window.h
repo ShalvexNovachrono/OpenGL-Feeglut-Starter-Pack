@@ -28,7 +28,11 @@ public:
 
 	void MousePassiveMotion(int x, int y) const;
 
-	void MouseScrollwheel(int button, int scrollDirection, int x, int y) const;
+	void MouseScrollWheel(int button, int scrollDirection, int x, int y) const;
+	
+	void Keyboard(unsigned char key, int x, int y) const;
+	
+	void KeyboardSpecial(int key, int x, int y) const;
 
 	float GetDeltaTime() const { return deltaTime; }
 
