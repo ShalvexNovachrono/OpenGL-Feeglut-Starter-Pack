@@ -1,11 +1,10 @@
 #ifndef RendererWindow
 #define RendererWindow
 
-#include "Input-Manager.h"
+#include "Asset-Manager.h"
 #include "main.h"
+#include "Input-Manager.h"
 #include "Maths.h"
-
-using namespace std;
 
 class CRendererWindow {
 public:
@@ -72,16 +71,17 @@ private:
 	int fps = 0;
 
 	float fov = 45.0f;
-	const float minimumFov = 1.0f;
-	const float maximumFov = 110.0f;
-	const float frameRate = 145;
-	const int frameTime = static_cast<int>(1000.0f / frameRate);
+	float minimumFov = 1.0f;
+	float maximumFov = 110.0f;
+	float frameRate = 145;
+	int frameTime = static_cast<int>(1000.0f / frameRate);
 
 	Vec3 worldPosition = Vec3(0, 0, 0);
 	Vec3 worldRotation = Vec3(0, 0, 0);
 	Vec4 clearColor = Vec4(0.2f, 0.3f, 0.3f, 1.0f);
 
 	CInputManager* input = nullptr;	
+	CAssetManager* assetManager = nullptr;
 	
 	bool didTimerGetCalled = false;
 };

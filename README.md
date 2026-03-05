@@ -6,6 +6,9 @@ A lightweight C++ starter template for OpenGL development using Freeglut. This p
   - `Renderer-Window.cpp/h`: The main window and rendering logic (`CRendererWindow` class).
   - `Maths.h`: Custom math library (Vectors, Lerp, etc.).
   - `Input-Manager.cpp/h`: Handles keyboard and mouse input (`CInputManager` class).
+  - `Asset-Manager.cpp/h`: Manages loading and retrieval of meshes and textures (`CAssetManager` class).
+  - `Mesh-Loader.cpp/h`: Utility for loading 3D mesh data.
+  - `Texture-Loader.cpp/h`: Utility for loading and managing OpenGL textures.
   - `main.h`: Common includes and logging macros.
 
 ## Where to Write Your Code
@@ -47,6 +50,13 @@ void CRendererWindow::Draw() const {
 ```
 
 ## Features
+
+### Asset Management (`CAssetManager`)
+The `CAssetManager` allows you to load and retrieve meshes and textures efficiently.
+- `assetManager->LoadMesh("name", "path/to/mesh.obj")`: Load a mesh file.
+- `assetManager->GetMesh("name")`: Retrieve a loaded mesh.
+- `assetManager->LoadTexture("name", "path/to/image.png", width, height)`: Load a texture.
+- `assetManager->GetTexture("name")`: Retrieve a loaded texture.
 
 ### Math Library (`Maths.h`)
 The project includes a custom math library with support for:

@@ -3,12 +3,12 @@
 
 int main(int argc, char* argv[]) {
 	LOG_DEBUG("Starting application...")
+	
+	CRendererWindow* mainWindow = new CRendererWindow(800, 600, "Shalvex Novachrono's OpenGL Window");
 
-	CRendererWindow* main_window = new CRendererWindow(800, 600, "Shalvex Novachrono's OpenGL Window");
+	mainWindow->Init(argc, argv);
+	mainWindow->CleanUp();
 
-	main_window->Init(argc, argv);
-	main_window->CleanUp();
-
-	delete main_window;
+	delete mainWindow;
 	return 0;
 }

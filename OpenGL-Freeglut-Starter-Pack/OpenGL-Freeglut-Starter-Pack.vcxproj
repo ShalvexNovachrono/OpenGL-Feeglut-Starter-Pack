@@ -131,18 +131,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Asset-Manager.cpp" />
+    <ClCompile Include="File-Loader.cpp" />
     <ClCompile Include="Glut-Callbacks.cpp" />
     <ClCompile Include="Input-Manager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mesh-Loader.cpp" />
     <ClCompile Include="Renderer-Window.cpp" />
+    <ClCompile Include="Texture-Loader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Array.h" />
+    <ClInclude Include="Asset-Manager.h" />
+    <ClInclude Include="File-Loader.h" />
     <ClInclude Include="Glut-Callbacks.h" />
     <ClInclude Include="Input-Manager.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Maths.h" />
+    <ClInclude Include="Mesh-Loader.h" />
     <ClInclude Include="Renderer-Window.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Texture-Loader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

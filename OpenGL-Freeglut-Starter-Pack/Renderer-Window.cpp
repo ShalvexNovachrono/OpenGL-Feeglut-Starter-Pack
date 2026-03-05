@@ -9,8 +9,9 @@ CRendererWindow::CRendererWindow(const int& width, const int&  height, const str
 
 void CRendererWindow::Init(int argc, char* argv[]) {
 
-	#pragma region Setup Input
-	input = new CInputManager(deltaTime);
+	#pragma region Setup Manager
+	input        = new CInputManager(deltaTime);
+	assetManager = new CAssetManager();
 	#pragma endregion
 	
 	
@@ -46,8 +47,8 @@ void CRendererWindow::Init(int argc, char* argv[]) {
 	glMatrixMode(GL_MODELVIEW);
 	
 	
-    glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
@@ -85,7 +86,7 @@ void CRendererWindow::Timer() {
 	string mousePosStr = input->GetMousePosition().tostr();
 	string mousePositionDeltaStr = input->GetMouseDelta().tostr();
 	string mouseStateStr = input->GetMouseMovementStateString();
-	LOG_DEBUG_R("FPS: " + to_string(fps) + " | Mouse Pos: " + mousePosStr + " | Mouse Delta" + mousePositionDeltaStr + " | \nMouse State: " + mouseStateStr + " | DeltaTime: " + to_string(deltaTime) + " | System DeltaTime: " + to_string(systemDeltaTime) + " | Current Frame: " + to_string(currentFrame))
+	LOG_DEBUG_R("FPS: " + to_string(fps) + " | Mouse Pos: " + mousePosStr + " | Mouse Delta: " + mousePositionDeltaStr + " | \nMouse State: " + mouseStateStr + " | DeltaTime: " + to_string(deltaTime) + " | System DeltaTime: " + to_string(systemDeltaTime) + " | Current Frame: " + to_string(currentFrame))
 	//-------End-------//
 
 	
@@ -164,9 +165,9 @@ void CRendererWindow::KeyboardSpecialUp(int key, int x, int y) const {
 	}
 }
 
-void CRendererWindow::ReshapeWindow(const int& width, const int&  height) {
-	this->width = width;
-	this->height = height;
+void CRendererWindow::ReshapeWindow(const int& newWidth, const int&  newHeight) {
+	width = newWidth;
+	height = newHeight;
 	glutReshapeWindow(width, height);
 	UpdateWindowDetails();
 }
