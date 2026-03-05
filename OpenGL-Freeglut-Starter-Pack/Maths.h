@@ -1,5 +1,5 @@
-#ifndef maths_h
-#define maths_h
+#ifndef Maths
+#define Maths
 
 #include "main.h"
 
@@ -847,4 +847,4 @@ struct Vec4 {
     }
 };
 
-#endif // !extra_math.h
+#endif

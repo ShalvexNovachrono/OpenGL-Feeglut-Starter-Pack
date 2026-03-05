@@ -7,11 +7,11 @@
 /// </summary>
 namespace GlutCallbacks {
 	namespace {
-		RendererWindow* rw_instance = nullptr;
+		CRendererWindow* rw_instance = nullptr;
 	}
 
 
-	void Init(RendererWindow* rw) {
+	void Init(CRendererWindow* rw) {
 		rw_instance = rw;
 	}
 
@@ -96,6 +96,18 @@ namespace GlutCallbacks {
 	void KeyboardSpecial(int key, int x, int y) {
 		if (rw_instance != nullptr) {
 			rw_instance->KeyboardSpecial(key, x, y);
+		}
+	}
+
+	void KeyboardUp(unsigned char key, int x, int y) {
+		if (rw_instance != nullptr) {
+			rw_instance->KeyboardUp(key, x, y);
+		}
+	}
+
+	void KeyboardSpecialUp(int key, int x, int y) {
+		if (rw_instance != nullptr) {
+			rw_instance->KeyboardSpecialUp(key, x, y);
 		}
 	}
 }

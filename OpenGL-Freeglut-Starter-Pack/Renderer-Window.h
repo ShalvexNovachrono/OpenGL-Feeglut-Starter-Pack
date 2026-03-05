@@ -1,16 +1,17 @@
-#ifndef renderer_window_h
-#define renderer_window_h
+#ifndef RendererWindow
+#define RendererWindow
 
+#include "Input-Manager.h"
 #include "main.h"
 #include "Maths.h"
 
 using namespace std;
 
-class RendererWindow {
+class CRendererWindow {
 public:
 
-	RendererWindow(const int& width, const int&  height, const string& title);
-	~RendererWindow() = default;
+	CRendererWindow(const int& width, const int&  height, const string& title);
+	~CRendererWindow() = default;
 
 	void Init(int argc, char* argv[]);
 
@@ -33,6 +34,10 @@ public:
 	void Keyboard(unsigned char key, int x, int y) const;
 	
 	void KeyboardSpecial(int key, int x, int y) const;
+
+	void KeyboardUp(unsigned char key, int x, int y) const;
+
+	void KeyboardSpecialUp(int key, int x, int y) const;
 
 	float GetDeltaTime() const { return deltaTime; }
 
@@ -76,8 +81,9 @@ private:
 	Vec3 worldRotation = Vec3(0, 0, 0);
 	Vec4 clearColor = Vec4(0.2f, 0.3f, 0.3f, 1.0f);
 
+	CInputManager* input = nullptr;	
+	
 	bool didTimerGetCalled = false;
 };
 
 #endif
-

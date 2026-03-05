@@ -132,11 +132,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Glut-Callbacks.cpp" />
+    <ClCompile Include="Input-Manager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer-Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Array.h" />
     <ClInclude Include="Glut-Callbacks.h" />
+    <ClInclude Include="Input-Manager.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Maths.h" />
     <ClInclude Include="Renderer-Window.h" />

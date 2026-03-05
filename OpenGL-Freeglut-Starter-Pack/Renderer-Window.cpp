@@ -1,14 +1,20 @@
 #include "Renderer-Window.h"
 #include "Glut-Callbacks.h"
 
-RendererWindow::RendererWindow(const int& width, const int&  height, const string& title) {
+CRendererWindow::CRendererWindow(const int& width, const int&  height, const string& title) {
     this->width = width;
     this->height = height;
     this->title = title;
 }
 
-void RendererWindow::Init(int argc, char* argv[]) {
+void CRendererWindow::Init(int argc, char* argv[]) {
 
+	#pragma region Setup Input
+	input = new CInputManager(deltaTime);
+	#pragma endregion
+	
+	
+	
 	GlutCallbacks::Init(this);
 
 	glutInit(&argc, argv);
@@ -27,6 +33,8 @@ void RendererWindow::Init(int argc, char* argv[]) {
 	glutMouseWheelFunc(GlutCallbacks::MouseScrollWheel);
 	glutKeyboardFunc(GlutCallbacks::Keyboard);
 	glutSpecialFunc(GlutCallbacks::KeyboardSpecial);
+	glutKeyboardUpFunc(GlutCallbacks::KeyboardUp);
+	glutSpecialUpFunc(GlutCallbacks::KeyboardSpecialUp);
 	glutTimerFunc(frameTime, GlutCallbacks::Timer, frameTime);
 
 	// Switching camera to projection mode
@@ -52,34 +60,45 @@ void RendererWindow::Init(int argc, char* argv[]) {
 
 }
 
-void RendererWindow::CleanUp() {
+void CRendererWindow::CleanUp() {
+	if (input != nullptr) {
+		delete input;
+		input = nullptr;
+	}
 }
 
-void RendererWindow::Start() {
+void CRendererWindow::Start() {
 	didTimerGetCalled = true;
-
-	
-	
-	
 }
 
-void RendererWindow::Timer() {
+void CRendererWindow::Timer() {
 	currentFrame = static_cast<float>(glutGet(GLUT_ELAPSED_TIME));              // seconds
 	systemDeltaTime = (currentFrame - lastFrame) / 1000.0f;
 	if (systemDeltaTime <= 0.0f) systemDeltaTime = 1e-6f;
 	deltaTime = timeScale * systemDeltaTime;
 	lastFrame = currentFrame;
 	fps = static_cast<int>(1.0f / systemDeltaTime);
+	
+	if (!didTimerGetCalled) Start();
 
 	//-------Debug-Info-------//
-	LOG_DEBUG_R("FPS: " + to_string(fps) + " | Delta Time: " + to_string(deltaTime) + " | System Delta Time: " + to_string(systemDeltaTime))
+	string mousePosStr = input->GetMousePosition().tostr();
+	string mousePositionDeltaStr = input->GetMouseDelta().tostr();
+	string mouseStateStr = input->GetMouseMovementStateString();
+	LOG_DEBUG_R("FPS: " + to_string(fps) + " | Mouse Pos: " + mousePosStr + " | Mouse Delta" + mousePositionDeltaStr + " | \nMouse State: " + mouseStateStr + " | DeltaTime: " + to_string(deltaTime) + " | System DeltaTime: " + to_string(systemDeltaTime) + " | Current Frame: " + to_string(currentFrame))
 	//-------End-------//
 
 	
+	
+	
+
+	
+	
+	input->BeginFrame();
 	glutPostRedisplay();
 }
 
-void RendererWindow::Draw() const {
+void CRendererWindow::Draw() const {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
 
@@ -97,48 +116,69 @@ void RendererWindow::Draw() const {
 	glutSwapBuffers();
 }
 
-void RendererWindow::MouseClick(int button, int state, int x, int y) const {
-	
-}
-
-void RendererWindow::MouseMotion(int x, int y) const {
-	
-}
-
-void RendererWindow::MousePassiveMotion(int x, int y) const {
-	
-}
-
-void RendererWindow::MouseScrollWheel(int button, int scrollDirection, int x, int y) const {
-	
-}
-
-void RendererWindow::Keyboard(unsigned char key, int x, int y) const {
-
-}
-
-void RendererWindow::KeyboardSpecial(int key, int x, int y) const {
-	if (key == GLUT_KEY_F1) 
-	{
-		LOG_DEBUG("F1 PRESSED")
+void CRendererWindow::MouseClick(int button, int state, int x, int y) const {
+	if (input != nullptr) {
+		input->SetMouseButtonState(button, state == GLUT_DOWN, Vec2(static_cast<float>(x), static_cast<float>(y)), MouseMovementState::MouseClick);
 	}
 }
 
-void RendererWindow::ReshapeWindow(const int& width, const int&  height) {
+void CRendererWindow::MouseMotion(int x, int y) const {
+	if (input != nullptr) {
+		input->SetMousePosition(Vec2(static_cast<float>(x), static_cast<float>(y)), MouseMovementState::MouseMotion);
+	}
+}
+
+void CRendererWindow::MousePassiveMotion(int x, int y) const {
+	if (input != nullptr) {
+		input->SetMousePosition(Vec2(static_cast<float>(x), static_cast<float>(y)), MouseMovementState::MousePassiveMotion);
+	}
+}
+
+void CRendererWindow::MouseScrollWheel(int button, int scrollDirection, int x, int y) const {
+	if (input != nullptr) {
+		input->AddMouseWheelDelta(scrollDirection, Vec2(static_cast<float>(x), static_cast<float>(y)));
+	}
+}
+
+void CRendererWindow::Keyboard(unsigned char key, int x, int y) const {
+	if (input != nullptr) {
+		input->SetKeyState(key, true, Vec2(static_cast<float>(x), static_cast<float>(y)), MouseMovementState::KeyboardPress);
+	}
+}
+
+void CRendererWindow::KeyboardSpecial(int key, int x, int y) const {
+	if (input != nullptr) {
+		input->SetKeyState(key, true, Vec2(static_cast<float>(x), static_cast<float>(y)), MouseMovementState::KeyboardPress);
+	}
+}
+
+void CRendererWindow::KeyboardUp(unsigned char key, int x, int y) const {
+	if (input != nullptr) {
+		input->SetKeyState(key, false, Vec2(static_cast<float>(x), static_cast<float>(y)), MouseMovementState::KeyboardPress);
+	}
+}
+
+void CRendererWindow::KeyboardSpecialUp(int key, int x, int y) const {
+	if (input != nullptr) {
+		input->SetKeyState(key, false, Vec2(static_cast<float>(x), static_cast<float>(y)), MouseMovementState::KeyboardPress);
+	}
+}
+
+void CRendererWindow::ReshapeWindow(const int& width, const int&  height) {
 	this->width = width;
 	this->height = height;
 	glutReshapeWindow(width, height);
 	UpdateWindowDetails();
 }
 
-void RendererWindow::SetFov(float new_fov) {
+void CRendererWindow::SetFov(float new_fov) {
 	if (new_fov < minimumFov) return;
 	if (new_fov > maximumFov) return;
 	fov = new_fov;
 	UpdateWindowDetails();
 }
 
-void RendererWindow::UpdateWindowDetails() const {
+void CRendererWindow::UpdateWindowDetails() const {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, width, height);

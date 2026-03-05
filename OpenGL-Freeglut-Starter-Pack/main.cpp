@@ -4,7 +4,7 @@
 int main(int argc, char* argv[]) {
 	LOG_DEBUG("Starting application...")
 
-	RendererWindow* main_window = new RendererWindow(800, 600, "Shalvex Novachrono's OpenGL Window");
+	CRendererWindow* main_window = new CRendererWindow(800, 600, "Shalvex Novachrono's OpenGL Window");
 
 	main_window->Init(argc, argv);
 	main_window->CleanUp();
