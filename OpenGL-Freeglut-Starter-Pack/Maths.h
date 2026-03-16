@@ -39,7 +39,7 @@ static float Clamp(float value, float Min, float Max) {
     return value;
 }
 
-static vector<float> parse_string_to_vector_float(string s, int expected_count) {
+static vector<float> ParseStringToVectorFloat(string s, int expected_count) {
     // Check for extra commas
     if (count_reoccurrence(s, ',') != expected_count - 1) {
         LOG_ERROR("parseVectorString: invalid number of commas.")
@@ -347,7 +347,7 @@ struct Vec2 {
     static Vec2 Down() { return { 0, -1 }; }
 
     static Vec2 stov2(string s) {
-        vector<float> v = parse_string_to_vector_float(s, 2);
+        vector<float> v = ParseStringToVectorFloat(s, 2);
         return { v[0], v[1] };
     }
 };
@@ -596,7 +596,7 @@ struct Vec3 {
     static Vec3 Backward() { return { 0, 0, -1 }; }
 
     static Vec3 stov3(string s) {
-        vector<float> v = parse_string_to_vector_float(s, 3);
+        vector<float> v = ParseStringToVectorFloat(s, 3);
         return { v[0], v[1], v[2] };
     }
 };
@@ -842,7 +842,7 @@ struct Vec4 {
     static Vec4 Backward() { return { 0, 0, -1, 0 }; }
 
     static Vec4 stov4(string s) {
-        vector<float> v = parse_string_to_vector_float(s, 4);
+        vector<float> v = ParseStringToVectorFloat(s, 4);
         return { v[0], v[1], v[2], v[3] };
     }
 };

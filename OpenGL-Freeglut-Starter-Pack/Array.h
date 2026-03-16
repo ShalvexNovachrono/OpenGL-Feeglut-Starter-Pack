@@ -12,8 +12,8 @@ class CArray {
     const int ResizeMultiplier = 4;
 
     void Resize() {
-        ArrayCapacity = (ArrayCapacity == 0) ? 1 : ArrayCapacity * ResizeMultiplier;
-        T* CollectionTemp = new T[ArrayCapacity];
+        int newCapacity = (ArrayCapacity == 0) ? 1 : ArrayCapacity * ResizeMultiplier;
+        T* CollectionTemp = new T[newCapacity];
 
         for (int i = 0; i < CollectionSize; i++) {
             CollectionTemp[i] = std::move(Collection[i]);
@@ -21,27 +21,31 @@ class CArray {
 
         delete[] Collection;
         Collection = CollectionTemp;
+        ArrayCapacity = newCapacity;
     }
 
 public:
+    using iterator = T*;
+    using const_iterator = const T*;
+
     CArray() {
         ArrayCapacity = 1;
         Collection = new T[ArrayCapacity];
     }
 
     CArray(const CArray& other) {
-        ArrayCapacity = other.Capacity;
+        ArrayCapacity = other.ArrayCapacity;
         CollectionSize = other.CollectionSize;
         Collection = new T[ArrayCapacity];
         for (int i = 0; i < CollectionSize; i++) {
             Collection[i] = other.Collection[i];
         }
     }
-
+    
     CArray& operator=(const CArray& other) {
         if (this != &other) {
             delete[] Collection;
-            ArrayCapacity = other.Capacity;
+            ArrayCapacity = other.ArrayCapacity;
             CollectionSize = other.CollectionSize;
             Collection = new T[ArrayCapacity];
             for (int i = 0; i < CollectionSize; i++) {
@@ -53,6 +57,30 @@ public:
 
     ~CArray() {
         delete[] Collection;
+    }
+
+    bool operator==(const CArray& other) const {
+        if (CollectionSize != other.CollectionSize) return false;
+        for (int i = 0; i < CollectionSize; i++) {
+            if (!(Collection[i] == other.Collection[i])) return false;
+        }
+        return true;
+    }
+    
+    iterator begin() {
+        return Collection;
+    }
+    
+    iterator end() {
+        return Collection + CollectionSize;
+    }
+
+    const_iterator begin() const {
+        return Collection;
+    }
+
+    const_iterator end() const {
+        return Collection + CollectionSize;
     }
 
     void Append(const T& value) {
@@ -97,7 +125,7 @@ public:
         return copy;
     }
 
-    void Remove(int index) {
+    void RemoveAt(int index) {
         if (index >= 0 && index < CollectionSize) {
             for (int i = index; i < CollectionSize - 1; i++) {
                 Collection[i] = Collection[i + 1];
@@ -120,6 +148,15 @@ public:
 
     void Clear() {
         CollectionSize = 0;
+    }
+    
+    int IndexOf(const T& value) {
+        for (int i = 0; i < CollectionSize; i++) {
+            if (Collection[i] == value) {
+                return i;
+            }
+        }
+        return -1; // nothing matched
     }
 
     void Reserve(int capacity) {

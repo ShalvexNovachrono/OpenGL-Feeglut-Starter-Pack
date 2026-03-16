@@ -24,6 +24,8 @@ struct Mesh {
 class CMeshLoader{
 public:
     static Mesh* LoadMesh(const string& filename);
+    
+    static Mesh* LoadMeshFromObj(const string& filename);
 };
 
 

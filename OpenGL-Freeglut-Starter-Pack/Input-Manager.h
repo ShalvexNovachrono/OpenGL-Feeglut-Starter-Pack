@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include "Array.h"
+#include "KeyValue.h"
 #include "Maths.h"
 
 struct ButtonState {
@@ -22,6 +23,41 @@ enum class MouseMovementState {
     KeyboardPress
 };
 
+struct KeyPairs {
+    int keyA, keyB;
+};
+
+class CInputManager;
+
+class CBaseInputActionType {
+public:
+    virtual ~CBaseInputActionType() = default;
+    CBaseInputActionType() = default;
+    
+    virtual float GetDelta(CInputManager* inputManager, float& deltaTime) = 0;
+};
+
+class CDeltaInputAction : public CBaseInputActionType {
+    CArray<KeyPairs> keyPairs;
+    float keyPairDelta = 0.0f;
+    float sensitivity = 5.0f; // Added sensitivity for faster response
+    bool disabled = false;
+public:    
+    CDeltaInputAction() = default;   
+    ~CDeltaInputAction() override;
+    
+    void SetDisabled(bool value);
+    void SetSensitivity(float value) { sensitivity = value; }
+    
+    bool isDisabled() const;
+    
+    void AddKeyPairs(KeyPairs pairs);
+    
+    float GetDelta(CInputManager* inputManager, float& deltaTime) override;
+    float GetCurrentDelta() const { return keyPairDelta; }
+};
+
+
 class CInputManager {
 private:
     float& deltaTime;
@@ -29,6 +65,8 @@ private:
     static constexpr int maxMouseKeys = 3;
     static constexpr int maxKeyboardKeys = 512;
 
+    CKeyValue<string, CDeltaInputAction> deltaInputActions;
+    
     CArray<ButtonState> keyboardKeys;
     CArray<ButtonState> mouseKeys;
     
@@ -73,6 +111,10 @@ public:
     string GetMouseMovementStateString() const;
 
     int GetMouseWheelDelta() const;
+    
+    void AddDeltaInputAction(string actionName, KeyPairs pairs);
+    void SetDeltaInputSensitivity(string actionName, float sensitivity);
+    float GetDeltaInputAction(string actionName);
 };
 
 #endif

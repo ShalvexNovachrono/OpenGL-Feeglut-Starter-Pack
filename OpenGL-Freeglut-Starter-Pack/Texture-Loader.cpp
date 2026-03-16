@@ -12,15 +12,15 @@ bool CTextureLoader::Load(const char* filePath, int width, int height) {
     unsigned char* data = stbi_load(filePath, &width, &height, &channels, 0);
 
     if (!data) {
-        BLog_WARNING("Failed to load texture: " << filePath)
-        BLog_WARNING("Reason: " << stbi_failure_reason())
+        B_LOG_WARNING("Failed to load texture: " << filePath)
+        B_LOG_WARNING("Reason: " << stbi_failure_reason())
         return false;
     }
 
     // Generate OpenGL texture
     glGenTextures(1, &ID);
     if (ID == 0) {
-        BLog_WARNING("Failed to generate OpenGL texture ID.")
+        B_LOG_WARNING("Failed to generate OpenGL texture ID.")
         stbi_image_free(data);
         return false;
     }
@@ -34,7 +34,7 @@ bool CTextureLoader::Load(const char* filePath, int width, int height) {
     case 3: format = GL_RGB; break;
     case 4: format = GL_RGBA; break;
     default:
-        BLog_WARNING("Unexpected number of channels: " << channels)
+        B_LOG_WARNING("Unexpected number of channels: " << channels)
         format = GL_RGB;
         break;
     }
@@ -48,7 +48,7 @@ bool CTextureLoader::Load(const char* filePath, int width, int height) {
     // Check for OpenGL errors during texture upload
     GLenum error = glGetError();
     if (error != GL_NO_ERROR) {
-        BLog_ERROR("OpenGL Error during texture upload: " << error)
+        B_LOG_ERROR("OpenGL Error during texture upload: " << error)
         stbi_image_free(data);
         return false;
     }

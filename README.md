@@ -9,6 +9,9 @@ A lightweight C++ starter template for OpenGL development using Freeglut. This p
   - `Asset-Manager.cpp/h`: Manages loading and retrieval of meshes and textures (`CAssetManager` class).
   - `Mesh-Loader.cpp/h`: Utility for loading 3D mesh data.
   - `Texture-Loader.cpp/h`: Utility for loading and managing OpenGL textures.
+  - `Array.h`: Custom dynamic array implementation (`CArray` class).
+  - `KeyValue.h`: Custom key-value pair container (`CKeyValue` class).
+  - `File-Loader.cpp/h`: Utility for reading file contents.
   - `main.h`: Common includes and logging macros.
 
 ## Where to Write Your Code
@@ -58,6 +61,11 @@ The `CAssetManager` allows you to load and retrieve meshes and textures efficien
 - `assetManager->LoadTexture("name", "path/to/image.png", width, height)`: Load a texture.
 - `assetManager->GetTexture("name")`: Retrieve a loaded texture.
 
+### Custom Containers (`CArray` & `CKeyValue`)
+Lightweight alternatives to STL containers:
+- **`CArray<T>`**: A dynamic array with `Append`, `RemoveAt`, and iterator support.
+- **`CKeyValue<K, V>`**: A simple dictionary/map implementation built on `CArray`. (not very fast for large collections)
+
 ### Math Library (`Maths.h`)
 The project includes a custom math library with support for:
 - **`Vec2`, `Vec3`, `Vec4`**: Vector classes with full operator overloading.
@@ -73,16 +81,41 @@ position += velocity * GetDeltaTime();
 
 ### Input Management (`CInputManager`)
 Access input via the `input` member in `CRendererWindow`:
+
+#### Keyboard & Mouse
 - `input->IsDown(key)`: Check if a key is currently held.
 - `input->WasPressed(key)`: Check if a key was pressed this frame.
-- `input->GetMousePosition()`: Get current mouse coordinates.
-- `input->GetMouseDelta()`: Get mouse movement since last frame.
+- `input->WasReleased(key)`: Check if a key was released this frame.
+- `input->IsMouseButtonDown(button)`: Check if a mouse button (0-2) is held.
+- `input->GetMousePosition()`: Get current mouse coordinates (`Vec2`).
+- `input->GetMouseDelta()`: Get mouse movement since last frame (`Vec2`).
+- `input->GetMouseWheelDelta()`: Get scroll wheel movement.
+
+#### Input Actions (Delta Actions)
+Define actions mapped to key pairs (e.g., 'A' and 'D') to get smoothed delta values for movement:
+```cpp
+// In Start()
+input->AddDeltaInputAction("Horizontal", { 'a', 'd' });
+
+// In Timer()
+float move = input->GetDeltaInputAction("Horizontal");
+position.x += move * GetDeltaTime();
+```
 
 ### Logging (`main.h`)
-Use these macros for colored console output:
-- `LOG_DEBUG("message")`: Green output for general info.
+The project provides several macros for colored console output and basic debugging:
+- `LOG_DEBUG("message")`: Green output for general information.
+- `LOG_DEBUG_R("message")`: Green output that overwrites the current console line (useful for counters).
 - `LOG_WARNING("message")`: Yellow output for warnings.
-- `LOG_ERROR("message")`: Red output (terminates application).
+- `LOG_ERROR("message")`: Red output for non-fatal errors.
+- `LOG_FATAL("message")`: Red output for fatal errors; calls `exit(EXIT_FAILURE)`.
+- `print(message)`: A simple macro for standard console output.
+
+Example:
+```cpp
+LOG_DEBUG("Texture loaded successfully!");
+if (x < 0) LOG_WARNING("Value is negative.");
+```
 
 ## Getting Started
 1. Clone the repository.

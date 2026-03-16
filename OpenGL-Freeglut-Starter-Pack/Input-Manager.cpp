@@ -1,5 +1,47 @@
 #include "Input-Manager.h"
 
+CDeltaInputAction::~CDeltaInputAction() {
+    keyPairs.Clear();
+}
+
+void CDeltaInputAction::SetDisabled(bool value) {
+    disabled = value;
+}
+
+bool CDeltaInputAction::isDisabled() const {
+    return disabled;
+}
+
+void CDeltaInputAction::AddKeyPairs(KeyPairs pairs) {
+    keyPairs.Append(pairs);   
+}
+
+float CDeltaInputAction::GetDelta(CInputManager* inputManager, float& deltaTime) {
+    if (disabled) return 0.0f;
+
+    bool pos = false, neg = false;
+    for (int i = 0; i < keyPairs.Size(); i++) {
+        const auto& kp = keyPairs[i];
+        if (inputManager->IsDown(kp.keyA)) pos = true;
+        else if (inputManager->IsDown(kp.keyB)) neg = true;
+    }
+
+    if (pos) {
+        keyPairDelta += sensitivity * deltaTime;
+    }
+    else if (neg) {
+        keyPairDelta -= sensitivity * deltaTime;
+    }
+    else if (keyPairDelta != 0.0f) {
+        float s = (keyPairDelta > 0.0f ? 1.0f : -1.0f);
+        keyPairDelta -= s * sensitivity * deltaTime;
+        if (abs(keyPairDelta) < (sensitivity * deltaTime * 1.1f)) keyPairDelta = 0.0f;
+    }
+
+    keyPairDelta = Clamp(keyPairDelta, -1.0f, 1.0f);
+    return keyPairDelta;
+}
+
 CInputManager::CInputManager(float& DeltaTime) : deltaTime(DeltaTime) {
     keyboardKeys.Reserve(maxKeyboardKeys);
     for (int i = 0; i < maxKeyboardKeys; i++) {
@@ -22,6 +64,11 @@ void CInputManager::BeginFrame() {
 
     for (int i = 0; i < mouseKeys.Size(); i++) {
         mouseKeys[i].previous = mouseKeys[i].current;
+    }
+
+    auto& entries = deltaInputActions.GetEntries();
+    for (int i = 0; i < entries.Size(); i++) {
+        entries[i].value.GetDelta(this, deltaTime);
     }
 
     mouseWheelDelta = 0;
@@ -120,15 +167,41 @@ MouseMovementState CInputManager::GetMouseMovementState() const {
 
 string CInputManager::GetMouseMovementStateString() const {
     switch (currentMouseMovementState) {
-    case MouseMovementState::MouseClick: return "MouseClick";
-    case MouseMovementState::MouseMotion: return "MouseMotion";
-    case MouseMovementState::MousePassiveMotion: return "MousePassiveMotion";
-    case MouseMovementState::MouseScrollWheel: return "MouseScrollWheel";
-    case MouseMovementState::KeyboardPress: return "KeyboardPress";
-    default: return "Unknown";
+        case MouseMovementState::MouseClick: return "MouseClick";
+        case MouseMovementState::MouseMotion: return "MouseMotion";
+        case MouseMovementState::MousePassiveMotion: return "MousePassiveMotion";
+        case MouseMovementState::MouseScrollWheel: return "MouseScrollWheel";
+        case MouseMovementState::KeyboardPress: return "KeyboardPress";
+        default: return "Unknown";
     }
 }
 
 int CInputManager::GetMouseWheelDelta() const {
     return mouseWheelDelta;
+}
+
+void CInputManager::AddDeltaInputAction(string actionName, KeyPairs pairs) {
+    CDeltaInputAction* action = deltaInputActions.GetPtr(actionName);
+    if (action) {
+        action->AddKeyPairs(pairs);
+    } else {
+        CDeltaInputAction newAction;
+        newAction.AddKeyPairs(pairs);
+        deltaInputActions.Add(actionName, newAction);
+    }
+}
+
+void CInputManager::SetDeltaInputSensitivity(string actionName, float sensitivity) {
+    CDeltaInputAction* action = deltaInputActions.GetPtr(actionName);
+    if (action) {
+        action->SetSensitivity(sensitivity);
+    }
+}
+
+float CInputManager::GetDeltaInputAction(string actionName) {
+    CDeltaInputAction* action = deltaInputActions.GetPtr(actionName);
+    if (action) {
+        return action->GetCurrentDelta();
+    }
+    return 0.0f;
 }

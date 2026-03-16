@@ -14,8 +14,6 @@ void CRendererWindow::Init(int argc, char* argv[]) {
 	assetManager = new CAssetManager();
 	#pragma endregion
 	
-	
-	
 	GlutCallbacks::Init(this);
 
 	glutInit(&argc, argv);
@@ -66,10 +64,23 @@ void CRendererWindow::CleanUp() {
 		delete input;
 		input = nullptr;
 	}
+	if (assetManager != nullptr) {
+		delete assetManager;
+		assetManager = nullptr;
+	}
 }
 
 void CRendererWindow::Start() {
 	didTimerGetCalled = true;
+	
+	assetManager->LoadMeshFromObj("zombie", "./zombie.obj");
+	assetManager->LoadTexture("shrek", "./shrek5.jpg", 0, 0); 
+	
+	worldPosition = Vec3(0.0f, -5.0f, -20.0f);
+	
+	input->AddDeltaInputAction("Vertical", {'W', 'S'});
+	input->AddDeltaInputAction("Vertical", {'w', 's'});
+	input->AddDeltaInputAction("Vertical", {GLUT_KEY_UP, GLUT_KEY_DOWN});
 }
 
 void CRendererWindow::Timer() {
@@ -82,38 +93,73 @@ void CRendererWindow::Timer() {
 	
 	if (!didTimerGetCalled) Start();
 
+	
+	
 	//-------Debug-Info-------//
 	string mousePosStr = input->GetMousePosition().tostr();
 	string mousePositionDeltaStr = input->GetMouseDelta().tostr();
 	string mouseStateStr = input->GetMouseMovementStateString();
-	LOG_DEBUG_R("FPS: " + to_string(fps) + " | Mouse Pos: " + mousePosStr + " | Mouse Delta: " + mousePositionDeltaStr + " | \nMouse State: " + mouseStateStr + " | DeltaTime: " + to_string(deltaTime) + " | System DeltaTime: " + to_string(systemDeltaTime) + " | Current Frame: " + to_string(currentFrame))
+	LOG_DEBUG_R(
+		"FPS: " + to_string(fps) + " | Mouse Pos: " + mousePosStr + " | Mouse Delta: " + mousePositionDeltaStr +
+		" | \nMouse State: " + mouseStateStr + " | DeltaTime: " + to_string(deltaTime) + " | System DeltaTime: " +
+		to_string(systemDeltaTime) + " | Current Frame: " + to_string(currentFrame))
 	//-------End-------//
-
-	
-	
 	
 
-	
-	
+
 	input->BeginFrame();
 	glutPostRedisplay();
 }
 
 void CRendererWindow::Draw() const {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+	glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 
-
+	// ==========================================
+	// WORLD SPACE RENDERING (3D)
+	// ==========================================
 	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
+	glLoadIdentity();
 
+	glPushMatrix();
 	glTranslatef(worldPosition.x, worldPosition.y, worldPosition.z);
 	glRotatef(worldRotation.x, 1, 0, 0);
 	glRotatef(worldRotation.y, 0, 1, 0);
 	glRotatef(worldRotation.z, 0, 0, 1);
 
-
+	// Render here
+	
+	
+	//
 
 	glPopMatrix();
+
+	// ==========================================
+	// SCREEN SPACE RENDERING (2D / UI)
+	// ==========================================
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix(); // Save the 3D Projection matrix
+	glLoadIdentity();
+	gluOrtho2D(0, width, 0, height); // Set up 2D coordinate system (0,0 is bottom-left)
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix(); // Save the 3D ModelView matrix
+	glLoadIdentity(); 
+
+	glDisable(GL_DEPTH_TEST); // UI doesn't need depth testing
+
+	// Render here
+	
+	
+	//
+
+	glEnable(GL_DEPTH_TEST); // Re-enable depth testing for the next frame
+
+	glPopMatrix(); // Restore 3D ModelView matrix
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix(); // Restore 3D Projection matrix
+	glMatrixMode(GL_MODELVIEW);
+
 	glutSwapBuffers();
 }
 

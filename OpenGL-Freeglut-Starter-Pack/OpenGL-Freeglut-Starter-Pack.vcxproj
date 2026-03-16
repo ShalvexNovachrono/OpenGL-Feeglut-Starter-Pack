@@ -146,6 +146,7 @@
     <ClInclude Include="File-Loader.h" />
     <ClInclude Include="Glut-Callbacks.h" />
     <ClInclude Include="Input-Manager.h" />
+    <ClInclude Include="KeyValue.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Maths.h" />
     <ClInclude Include="Mesh-Loader.h" />
