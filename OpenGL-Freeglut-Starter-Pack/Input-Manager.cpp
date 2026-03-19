@@ -205,3 +205,63 @@ float CInputManager::GetDeltaInputAction(string actionName) {
     }
     return 0.0f;
 }
+
+void CInputManager::SetCursorVisible(bool visible) {
+    if (visible) {
+        glutSetCursor(GLUT_CURSOR_INHERIT);
+    } else {
+        glutSetCursor(GLUT_CURSOR_NONE);
+    }
+}
+
+void CInputManager::SetCursorStyle(int cursorStyle) {
+    glutSetCursor(cursorStyle);
+}
+
+void CInputManager::SetCursorRightArrow() {
+    glutSetCursor(GLUT_CURSOR_RIGHT_ARROW);
+}
+
+void CInputManager::SetCursorLeftArrow() {
+    glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+}
+
+void CInputManager::SetCursorInfo() {
+    glutSetCursor(GLUT_CURSOR_INFO);
+}
+
+void CInputManager::SetCursorDestroy() {
+    glutSetCursor(GLUT_CURSOR_DESTROY);
+}
+
+void CInputManager::SetCursorHelp() {
+    glutSetCursor(GLUT_CURSOR_HELP);
+}
+
+void CInputManager::SetCursorCycle() {
+    glutSetCursor(GLUT_CURSOR_CYCLE);
+}
+
+void CInputManager::SetCursorSpray() {
+    glutSetCursor(GLUT_CURSOR_SPRAY);
+}
+
+void CInputManager::SetCursorWait() {
+    glutSetCursor(GLUT_CURSOR_WAIT);
+}
+
+void CInputManager::SetCursorText() {
+    glutSetCursor(GLUT_CURSOR_TEXT);
+}
+
+void CInputManager::SetCursorCrosshair() {
+    glutSetCursor(GLUT_CURSOR_CROSSHAIR);
+}
+
+void CInputManager::SetCursorNone() {
+    glutSetCursor(GLUT_CURSOR_NONE);
+}
+
+void CInputManager::SetCursorInherit() {
+    glutSetCursor(GLUT_CURSOR_INHERIT);
+}

@@ -284,6 +284,78 @@ public:
     /// <param name="actionName">The name of the action.</param>
     /// <returns>The delta value (typically between -1 and 1).</returns>
     float GetDeltaInputAction(string actionName);
+
+    /// <summary>
+    /// Sets the visibility of the mouse cursor.
+    /// </summary>
+    /// <param name="visible">True to make the cursor visible, false to hide it.</param>
+    void SetCursorVisible(bool visible);
+
+    /// <summary>
+    /// Sets the style of the mouse cursor.
+    /// </summary>
+    /// <param name="cursorStyle">The GLUT cursor style constant.</param>
+    void SetCursorStyle(int cursorStyle);
+
+    /// <summary>
+    /// Sets the mouse cursor to a right arrow.
+    /// </summary>
+    void SetCursorRightArrow();
+
+    /// <summary>
+    /// Sets the mouse cursor to a left arrow.
+    /// </summary>
+    void SetCursorLeftArrow();
+
+    /// <summary>
+    /// Sets the mouse cursor to an info icon.
+    /// </summary>
+    void SetCursorInfo();
+
+    /// <summary>
+    /// Sets the mouse cursor to a destroy icon.
+    /// </summary>
+    void SetCursorDestroy();
+
+    /// <summary>
+    /// Sets the mouse cursor to a help icon.
+    /// </summary>
+    void SetCursorHelp();
+
+    /// <summary>
+    /// Sets the mouse cursor to a cycle icon.
+    /// </summary>
+    void SetCursorCycle();
+
+    /// <summary>
+    /// Sets the mouse cursor to a spray icon.
+    /// </summary>
+    void SetCursorSpray();
+
+    /// <summary>
+    /// Sets the mouse cursor to a wait icon.
+    /// </summary>
+    void SetCursorWait();
+
+    /// <summary>
+    /// Sets the mouse cursor to a text (I-beam) icon.
+    /// </summary>
+    void SetCursorText();
+
+    /// <summary>
+    /// Sets the mouse cursor to a crosshair.
+    /// </summary>
+    void SetCursorCrosshair();
+
+    /// <summary>
+    /// Sets the mouse cursor to be invisible.
+    /// </summary>
+    void SetCursorNone();
+
+    /// <summary>
+    /// Sets the mouse cursor to inherit the default system cursor.
+    /// </summary>
+    void SetCursorInherit();
 };
 
 #endif
