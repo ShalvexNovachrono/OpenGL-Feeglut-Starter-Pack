@@ -57,16 +57,67 @@ void CRendererWindow::Draw() const {
 
 ### Asset Management (`CAssetManager`)
 The `CAssetManager` allows you to load and retrieve meshes and textures efficiently.
-- `assetManager->LoadMesh("name", "path/to/mesh.obj")`: Load a mesh file.
-- `assetManager->GetMesh("name")`: Retrieve a loaded mesh.
-- `assetManager->LoadTexture("name", "path/to/image.png", width, height)`: Load a texture.
-- `assetManager->GetTexture("name")`: Retrieve a loaded texture.
+
+**Loading Assets:**
+```cpp
+// In Start() or a loading function
+assetManager->LoadMesh("teapot", "Assets/Meshes/teapot.obj");
+assetManager->LoadTexture("brick", "Assets/Textures/brick.png", 512, 512); // width and height are optional
+```
+
+**Retrieving Assets:**
+```cpp
+// In Draw() or any rendering function
+CMesh* teapotMesh = assetManager->GetMesh("teapot");
+CTexture* brickTexture = assetManager->GetTexture("brick");
+
+if (teapotMesh) {
+    // Use teapotMesh for rendering
+}
+if (brickTexture) {
+    // Bind brickTexture
+}
+```
 
 ### Thread Management (`CThreadManager`)
 The `CThreadManager` provides a thread pool for asynchronous task execution, allowing you to offload heavy computations without blocking the main thread.
-- `CThreadManager threadManager;`: Create a thread pool (defaults to hardware concurrency).
-- `threadManager.Enqueue([]() { /* your task here */ });`: Enqueue a task to be executed.
-- `threadManager.WaitAll();`: Wait for all enqueued tasks to complete.
+
+**Basic Usage:**
+```cpp
+// In your class, typically as a member variable
+CThreadManager threadManager; 
+
+// Enqueue a task (e.g., in Start() or a game logic function)
+// The task will run asynchronously in one of the thread pool's worker threads.
+threadManager.Enqueue([]() {
+    LOG_DEBUG("Performing a heavy computation in a background thread...");
+    // Simulate work
+    this_thread::sleep_for(chrono::seconds(2)); 
+    LOG_DEBUG("Computation complete!");
+});
+
+// If you need to wait for all enqueued tasks to finish (e.g., before exiting)
+// This will block the calling thread until all tasks are done.
+threadManager.WaitAll(); 
+```
+
+**Enqueueing tasks that return values:**
+You can use `std::async` in conjunction with `Enqueue` if you need to retrieve a result from an asynchronous task.
+```cpp
+// Example: Calculate something and get the result later
+std::future<int> futureResult = threadManager.Enqueue([]() {
+    LOG_DEBUG("Calculating sum in background...");
+    int sum = 0;
+    for (int i = 0; i < 1000000; ++i) {
+        sum += i;
+    }
+    return sum;
+});
+
+// Later, when you need the result (this will block until the task is complete)
+int result = futureResult.get();
+LOG_DEBUG("Calculated sum: " + to_string(result));
+```
 
 ### Custom Containers (`CArray` & `CKeyValue`)
 Lightweight alternatives to STL containers:
