@@ -10,6 +10,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <deque>
 #include <type_traits>
 #include <random>

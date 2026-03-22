@@ -73,8 +73,8 @@ void CRendererWindow::CleanUp() {
 void CRendererWindow::Start() {
 	didTimerGetCalled = true;
 	
-	/*assetManager->LoadMeshFromObjAsync("zombie", "./Assets/zombie.obj");
-	assetManager->LoadTextureAsync("shrek", "./Assets/shrek5.jpg", 0, 0); */
+	assetManager->LoadMeshFromObjAsync("zombie", "./Assets/zombie.obj");
+	assetManager->LoadTextureAsync("shrek", "./Assets/shrek5.jpg", 0, 0);
 	
 	worldPosition = Vec3(0.0f, -5.0f, -20.0f);
 	
@@ -129,9 +129,9 @@ void CRendererWindow::Draw() const {
 
 	// Render here
 	Mesh* zombieMesh = assetManager->GetMesh("zombie");
-	//CTextureLoader* shrekTexture = assetManager->GetTexture("shrek");
+	CTextureLoader* shrekTexture = assetManager->GetTexture("shrek");
 
-	/*if (zombieMesh != nullptr) {
+	if (zombieMesh != nullptr) {
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
@@ -147,7 +147,7 @@ void CRendererWindow::Draw() const {
 		glDisableClientState(GL_NORMAL_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	}*/
+	}
 	
 	//
 

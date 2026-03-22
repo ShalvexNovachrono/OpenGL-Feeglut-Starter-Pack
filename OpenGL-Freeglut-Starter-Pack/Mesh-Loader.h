@@ -13,6 +13,7 @@ struct TextureCoordinates {
     GLfloat u, v;
 };
 
+
 struct Mesh {
     Vertex* vertices;
     Vec3* normals;

@@ -180,3 +180,7 @@ if (x < 0) LOG_WARNING("Value is negative.");
 2. Open `OpenGL-Feeglut-Starter-Pack.sln` in Visual Studio.
 3. Ensure the configuration is set to **Debug x86** or **Release x86** (Freeglut is configured for x86 in this pack).
 4. Build and Run (F5).
+
+
+## Resources
+1. Wavefront (.obj) loader: https://www.scratchapixel.com/lessons/3d-basic-rendering/obj-file-format/obj-file-format.html

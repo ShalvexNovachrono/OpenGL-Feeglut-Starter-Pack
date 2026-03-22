@@ -136,6 +136,15 @@ public:
         }
         return copy;
     }
+    
+    T* Steal() {
+        if (CollectionSize == 0) return nullptr;
+        T* ptr = Collection;
+        Collection = new T[1];
+        ArrayCapacity = 1;
+        CollectionSize = 0;
+        return ptr;
+    }
 
     void RemoveAt(int index) {
         if (index >= 0 && index < CollectionSize) {

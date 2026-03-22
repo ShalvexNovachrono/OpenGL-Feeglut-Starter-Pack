@@ -116,23 +116,40 @@ struct FaceVertex {
     }
 };
 
+struct FaceVertexHash {
+    size_t operator()(const FaceVertex& fv) const {
+        size_t h = std::hash<int>{}(fv.vertex_index);
+        h ^= std::hash<int>{}(fv.st_coord_index) + 0x9e3779b9 + (h << 6) + (h >> 2);
+        h ^= std::hash<int>{}(fv.normal_index)   + 0x9e3779b9 + (h << 6) + (h >> 2);
+        return h;
+    }
+};
+
 struct FaceGroup {
     CArray<FaceVertex> face_vertices;
     string name;
 };
 
-static void ParseFaceVertex(const string& tuple, FaceVertex& fv) {
-    stringstream ss(tuple);
-    string part;
+static void ParseFaceVertex(const char* str, FaceVertex& fv) {
+    fv.vertex_index    = -1;
+    fv.st_coord_index  = -1;
+    fv.normal_index    = -1;
 
-    if (getline(ss, part, '/')) {
-        if (!part.empty()) fv.vertex_index = stoi(part) - 1;
+    const char* p = str;
+    if (*p && *p != '/') {
+        fv.vertex_index = ParseNumber(p) - 1;
     }
-    if (getline(ss, part, '/')) {
-        if (!part.empty()) fv.st_coord_index = stoi(part) - 1;
+    if (*p == '/') {
+        ++p;
+        if (*p && *p != '/') {
+            fv.st_coord_index = ParseNumber(p) - 1;
+        }
     }
-    if (getline(ss, part, '/')) {
-        if (!part.empty()) fv.normal_index = stoi(part) - 1;
+    if (*p == '/') {
+        ++p;
+        if (*p) {
+            fv.normal_index = ParseNumber(p) - 1;
+        }
     }
 }
 
@@ -179,7 +196,7 @@ Mesh* CMeshLoader::LoadMeshFromObj(const string& filename) {
             CArray<FaceVertex> face;
             while (ss >> tuple) {
                 FaceVertex fv;
-                ParseFaceVertex(tuple, fv);
+                ParseFaceVertex(tuple.c_str(), fv);
                 face.Append(fv);
             }
             // Triangulate
@@ -202,17 +219,18 @@ Mesh* CMeshLoader::LoadMeshFromObj(const string& filename) {
     CArray<TextureCoordinates> out_texCoords;
     CArray<Vec3> out_normals;
     CArray<GLushort> out_indices;
-    map<FaceVertex, GLushort> uniqueVertices;
+    unordered_map<FaceVertex, GLushort, FaceVertexHash> uniqueVertices;
 
     for (const auto& group : face_groups) {
         for (int i = 0; i < group.face_vertices.Size(); ++i) {
             const FaceVertex& fv = group.face_vertices[i];
             
-            if (uniqueVertices.find(fv) == uniqueVertices.end()) {
-                uniqueVertices[fv] = (GLushort)out_vertices.Size();
-                
+            auto result = uniqueVertices.try_emplace(
+                fv, (GLushort)out_vertices.Size()
+            );
+            if (result.second) {
                 out_vertices.Append(temp_vertices[fv.vertex_index]);
-                
+
                 if (fv.st_coord_index != -1 && fv.st_coord_index < temp_texCoords.Size())
                     out_texCoords.Append(temp_texCoords[fv.st_coord_index]);
                 else
@@ -223,18 +241,18 @@ Mesh* CMeshLoader::LoadMeshFromObj(const string& filename) {
                 else
                     out_normals.Append({0, 0, 0});
             }
-            out_indices.Append(uniqueVertices[fv]);
+            out_indices.Append(result.first->second);
         }
     }
 
     mesh->vertexCount = out_vertices.Size();
-    mesh->vertices = out_vertices.Data();
+    mesh->vertices = out_vertices.Steal();
     mesh->texCoordCount = out_texCoords.Size();
-    mesh->texCoords = out_texCoords.Data();
+    mesh->texCoords = out_texCoords.Steal();
     mesh->normalCount = out_normals.Size();
-    mesh->normals = out_normals.Data();
+    mesh->normals = out_normals.Steal();
     mesh->indexCount = out_indices.Size();
-    mesh->indices = out_indices.Data();
+    mesh->indices = out_indices.Steal();
 
     file.close();
     LOG_DEBUG("Mesh loaded successfully from OBJ with groups: " + filename)
