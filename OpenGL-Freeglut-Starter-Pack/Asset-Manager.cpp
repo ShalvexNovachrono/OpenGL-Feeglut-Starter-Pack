@@ -1,4 +1,6 @@
+#define STB_IMAGE_IMPLEMENTATION  
 #include "Asset-Manager.h"
+#include "stb_image.h"
 
 CAssetManager::~CAssetManager() {
     threadManager.WaitAll(); 
@@ -36,12 +38,28 @@ void CAssetManager::LoadTexture(const string& textureName, const string& texture
 }
 
 future<void> CAssetManager::LoadTextureAsync(const string& textureName, const string& textureFilePath, int width, int height) {
-    return threadManager.Enqueue([this, textureName, textureFilePath, width, height] {
+    return threadManager.Enqueue([this, textureName, textureFilePath] {
+        TextureData data = CTextureLoader::LoadFromDisk(
+            textureFilePath.c_str()
+        );
         auto* tex = new CTextureLoader();
-        tex->Load(textureFilePath.c_str(), width, height);
-        std::lock_guard<mutex> lock(textureMutex);
-        textureCollection[textureName] = tex;
+
+        lock_guard<mutex> lock(pendingMutex);
+        pendingTextures.Append({ textureName, tex, data });
     });
+}
+
+void CAssetManager::UploadPendingTextures() {
+    lock_guard<mutex> lock(pendingMutex);
+    for (int i = 0; i < pendingTextures.Size(); i++) {
+        auto& pending = pendingTextures[i];
+        pending.loader->UploadToGPU(pending.data);
+        if (pending.data.pixels) stbi_image_free(pending.data.pixels);
+
+        lock_guard<mutex> texLock(textureMutex);
+        textureCollection[pending.name] = pending.loader;
+    }
+    pendingTextures.Clear();
 }
 
 Mesh* CAssetManager::GetMesh(const string& meshName) {

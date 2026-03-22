@@ -3,15 +3,26 @@
 #include "KeyValue.h"
 #include "main.h"
 #include "Mesh-Loader.h"
-#include "Texture-Loader.h"
 #include "Thread-Manager.h"
+#include "Texture-Loader.h"
+
+struct PendingTexture {
+    string name;
+    CTextureLoader* loader;
+    TextureData data;
+};
 
 class CAssetManager {
 private:
     mutex meshMutex;
     mutex textureMutex;
+    mutex pendingMutex;
+    
     CKeyValue<string, Mesh*> meshCollection;
     CKeyValue<string, CTextureLoader*> textureCollection;
+    
+    CArray<PendingTexture> pendingTextures;
+    
     CArray<thread> activeThreads;
     CThreadManager threadManager; 
 public:
@@ -70,6 +81,12 @@ public:
     /// <param name="width">The width of the texture.</param>
     /// <param name="height">The height of the texture.</param>
     future<void>  LoadTextureAsync(const string& textureName, const string& textureFilePath, int width, int height);
+    
+    /// <summary>
+    /// Uploads any textures whose pixel data has finished loading.
+    /// Must be called from the main thread once per frame.
+    /// </summary>
+    void UploadPendingTextures();
     
     /// <summary>
     /// Retrieves a loaded mesh by its name.

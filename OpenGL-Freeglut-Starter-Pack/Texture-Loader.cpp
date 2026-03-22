@@ -1,67 +1,72 @@
-#define STB_IMAGE_IMPLEMENTATION  
 #include "Texture-Loader.h"
 #include "stb_image.h"
 
 CTextureLoader::~CTextureLoader() {
-    glDeleteTextures(1, &ID);
+    if (ID != 0) glDeleteTextures(1, &ID);
 }
 
-bool CTextureLoader::Load(const char* filePath, int width, int height) {
-    // Load image using stb_image
-    int channels;
-    unsigned char* data = stbi_load(filePath, &width, &height, &channels, 0);
-
-    if (!data) {
+TextureData CTextureLoader::LoadFromDisk(const char* filePath) {
+    TextureData data;
+    data.pixels = stbi_load(
+        filePath, &data.width, &data.height, &data.channels, 0
+    );
+    if (!data.pixels) {
         B_LOG_WARNING("Failed to load texture: " << filePath)
         B_LOG_WARNING("Reason: " << stbi_failure_reason())
-        return false;
     }
+    return data;
+}
 
-    // Generate OpenGL texture
+bool CTextureLoader::UploadToGPU(const TextureData& data) {
+    if (!data.IsValid()) return false;
+
     glGenTextures(1, &ID);
     if (ID == 0) {
         B_LOG_WARNING("Failed to generate OpenGL texture ID.")
-        stbi_image_free(data);
         return false;
     }
 
     glBindTexture(GL_TEXTURE_2D, ID);
 
-    // Determine format based on channels
     GLenum format;
-    switch (channels) {
+    switch (data.channels) {
     case 1: format = GL_LUMINANCE; break;
-    case 3: format = GL_RGB; break;
-    case 4: format = GL_RGBA; break;
+    case 3: format = GL_RGB;       break;
+    case 4: format = GL_RGBA;      break;
     default:
-        B_LOG_WARNING("Unexpected number of channels: " << channels)
+        B_LOG_WARNING("Unexpected number of channels: " << data.channels)
         format = GL_RGB;
         break;
     }
 
-    // Upload texture data
+    WIDTH  = data.width;
+    HEIGHT = data.height;
+
     glTexImage2D(
         GL_TEXTURE_2D, 0, static_cast<GLint>(format),
-        width, height, 0, format, GL_UNSIGNED_BYTE, data
+        data.width, data.height, 0,
+        format, GL_UNSIGNED_BYTE, data.pixels
     );
 
-    // Check for OpenGL errors during texture upload
     GLenum error = glGetError();
     if (error != GL_NO_ERROR) {
-        B_LOG_ERROR("OpenGL Error during texture upload: " << error)
-        stbi_image_free(data);
+        B_LOG_ERROR("OpenGL error during texture upload: " << error)
+        glBindTexture(GL_TEXTURE_2D, 0);
         return false;
     }
 
-    // Set texture parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,     GL_REPEAT);
 
-    // Clean up
-    stbi_image_free(data);
     glBindTexture(GL_TEXTURE_2D, 0);
-
     return true;
+}
+
+bool CTextureLoader::Load(const char* filePath, int width, int height) {
+    TextureData data = LoadFromDisk(filePath);
+    bool result = UploadToGPU(data);
+    if (data.pixels) stbi_image_free(data.pixels);
+    return result;
 }

@@ -73,8 +73,8 @@ void CRendererWindow::CleanUp() {
 void CRendererWindow::Start() {
 	didTimerGetCalled = true;
 	
-	assetManager->LoadMeshFromObjAsync("zombie", "./Assets/zombie.obj");
-	assetManager->LoadTextureAsync("shrek", "./Assets/shrek5.jpg", 0, 0);
+	assetManager->LoadMeshFromObjAsync("zombie", "./Assets/Porsche_911_GT2.obj");
+	assetManager->LoadTexture("shrek", "./Assets/shrek5.jpg", 0, 0);
 	
 	worldPosition = Vec3(0.0f, -5.0f, -20.0f);
 	
@@ -106,8 +106,10 @@ void CRendererWindow::Timer() {
 	//-------End-------//
 	
 
+	worldRotation += Vec3(0.0f, deltaTime * 100.0f, 0.0f);
 
 	input->BeginFrame();
+	assetManager->UploadPendingTextures();
 	glutPostRedisplay();
 }
 
@@ -128,20 +130,19 @@ void CRendererWindow::Draw() const {
 	glRotatef(worldRotation.z, 0, 0, 1);
 
 	// Render here
-	Mesh* zombieMesh = assetManager->GetMesh("zombie");
-	CTextureLoader* shrekTexture = assetManager->GetTexture("shrek");
+	Mesh* porscheModel = assetManager->GetMesh("zombie");
 
-	if (zombieMesh != nullptr) {
+	if (porscheModel != nullptr) {
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-		glVertexPointer(3, GL_FLOAT, 0, zombieMesh->vertices);
-		glNormalPointer(GL_FLOAT, 0, zombieMesh->normals);
-		glTexCoordPointer(2, GL_FLOAT, 0, zombieMesh->texCoords);
+		glVertexPointer(3, GL_FLOAT, 0, porscheModel->vertices);
+		glNormalPointer(GL_FLOAT, 0, porscheModel->normals);
+		glTexCoordPointer(2, GL_FLOAT, 0, porscheModel->texCoords);
 
-		glDrawElements(GL_TRIANGLES, zombieMesh->indexCount, GL_UNSIGNED_SHORT, zombieMesh->indices);
+		glDrawElements(GL_TRIANGLES, porscheModel->indexCount, GL_UNSIGNED_SHORT, porscheModel->indices);
 
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_NORMAL_ARRAY);
@@ -169,6 +170,25 @@ void CRendererWindow::Draw() const {
 
 	// Render here
 	
+	CTextureLoader* shrekTex = assetManager->GetTexture("shrek");
+	if (shrekTex != nullptr) {
+		float uiSize = 150.0f;
+		float padding = 20.0f;
+ 		
+		glPushMatrix();
+		// Position at bottom-right
+		glTranslatef(width - uiSize - padding, padding, 0.0f);
+ 		
+		glBindTexture(GL_TEXTURE_2D, shrekTex->GetID());
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(0.0f, 0.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f(uiSize, 0.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex2f(uiSize, uiSize);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(0.0f, uiSize);
+		glEnd();
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glPopMatrix();
+	}
 	
 	//
 

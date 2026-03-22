@@ -46,7 +46,7 @@ public:
 	/// <summary>
 	/// Drawing callback function for FreeGLUT. Renders the scene.
 	/// </summary>
-	void Draw() const;
+	void Draw() const; 
 
 	/// <summary>
 	/// Mouse click callback function for FreeGLUT.
