@@ -93,3 +93,11 @@ threadManager.Enqueue([]() {
 - Freeglut (x86, included)
 - miniaudio (for sound)
 - stb_image (for textures)
+
+## Resources
+1. Wavefront (.obj) loader:  https://www.scratchapixel.com/lessons/3d-basic-rendering/obj-file-format/obj-file-format.html
+2. stb_image:                https://github.com/nothings/stb/blob/master/stb_image.h
+3. miniaudio:                https://github.com/mackron/miniaudio?tab=readme-ov-file#documentation
+4. multithreading:           https://www.geeksforgeeks.org/cpp/multithreading-in-cpp/
+5. mutex:                    https://www.geeksforgeeks.org/cpp/std-mutex-in-cpp/
+6. lock_guard:               https://www.geeksforgeeks.org/cpp/stdunique_lock-or-stdlock_guard-which-is-better/
