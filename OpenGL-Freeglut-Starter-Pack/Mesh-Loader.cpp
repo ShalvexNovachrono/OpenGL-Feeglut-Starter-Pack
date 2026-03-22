@@ -1,6 +1,6 @@
 #include "Mesh-Loader.h"
 
-#include "KeyValue.h"
+#include "Key-Value.h"
 
 static void CustomLoadVertices(ifstream& content, Mesh& mesh) {
     content >> mesh.vertexCount;

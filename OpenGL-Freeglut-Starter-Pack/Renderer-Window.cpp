@@ -73,7 +73,10 @@ void CRendererWindow::CleanUp() {
 void CRendererWindow::Start() {
 	didTimerGetCalled = true;
 	
-	assetManager->LoadMeshFromObjAsync("zombie", "./Assets/Porsche_911_GT2.obj");
+	assetManager->LoadMeshFromObjAsync("porsche 911", "./Assets/Porsche_911_GT2.obj");
+	assetManager->LoadMeshFromObjAsync("zombie", "./Assets/zombie.obj");
+	assetManager->LoadAudioAsync("slap", "./Assets/slap-hurt-pain-sound-effect-262618.mp3");
+	assetManager->LoadAudioAsync("walking", "./Assets/walking.mp3");
 	assetManager->LoadTexture("shrek", "./Assets/shrek5.jpg", 0, 0);
 	
 	worldPosition = Vec3(0.0f, -5.0f, -20.0f);
@@ -107,6 +110,35 @@ void CRendererWindow::Timer() {
 	
 
 	worldRotation += Vec3(0.0f, deltaTime * 100.0f, 0.0f);
+	
+	
+	if (input->WasPressed('E') || input->WasPressed('e')) {
+		ma_sound* music = assetManager->GetAudio("slap");
+
+		if (music != nullptr) {
+			LOG_DEBUG("Music found")
+			ma_sound_set_looping(music, MA_FALSE);   // loop it
+			ma_sound_set_volume(music, 1);       // 0.0 to 1.0
+			ma_sound_start(music);
+		} else {
+			LOG_WARNING("Music not found")
+		}
+	}
+	
+	if (input->WasPressed('A') || input->WasPressed('a')) {
+		ma_sound* music = assetManager->GetAudio("walking");
+
+		if (music != nullptr) {
+			LOG_DEBUG("Music found")
+			ma_sound_set_looping(music, MA_FALSE);   // loop it
+			ma_sound_set_volume(music, 1);       // 0.0 to 1.0
+			ma_sound_start(music);
+		} else {
+			LOG_WARNING("Music not found")
+		}
+	}
+	
+	
 
 	input->BeginFrame();
 	assetManager->UploadPendingTextures();
@@ -130,7 +162,7 @@ void CRendererWindow::Draw() const {
 	glRotatef(worldRotation.z, 0, 0, 1);
 
 	// Render here
-	Mesh* porscheModel = assetManager->GetMesh("zombie");
+	Mesh* porscheModel = assetManager->GetMesh("porsche 911");
 
 	if (porscheModel != nullptr) {
 
@@ -143,6 +175,25 @@ void CRendererWindow::Draw() const {
 		glTexCoordPointer(2, GL_FLOAT, 0, porscheModel->texCoords);
 
 		glDrawElements(GL_TRIANGLES, porscheModel->indexCount, GL_UNSIGNED_SHORT, porscheModel->indices);
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_NORMAL_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	}
+	Mesh* zombieModel = assetManager->GetMesh("zombie");
+
+	if (zombieModel != nullptr) {
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		glVertexPointer(3, GL_FLOAT, 0, zombieModel->vertices);
+		glNormalPointer(GL_FLOAT, 0, zombieModel->normals);
+		glTexCoordPointer(2, GL_FLOAT, 0, zombieModel->texCoords);
+
+		glDrawElements(GL_TRIANGLES, zombieModel->indexCount, GL_UNSIGNED_SHORT, zombieModel->indices);
 
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_NORMAL_ARRAY);

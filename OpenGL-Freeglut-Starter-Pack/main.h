@@ -17,6 +17,7 @@
 #include <cmath>
 #include <functional>
 #include <algorithm>
+#include <stack>
 #include <Windows.h>
 #include <thread>
 #include <mutex>
@@ -25,6 +26,7 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include "GL/freeglut.h"
+#include "miniaudio.h"
 
 using namespace std;
 

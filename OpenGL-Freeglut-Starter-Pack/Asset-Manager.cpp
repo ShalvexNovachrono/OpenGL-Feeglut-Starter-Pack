@@ -1,12 +1,22 @@
-#define STB_IMAGE_IMPLEMENTATION  
+#define STB_IMAGE_IMPLEMENTATION 
+#define MINIAUDIO_IMPLEMENTATION
 #include "Asset-Manager.h"
 #include "stb_image.h"
+#include "miniaudio.h"
+
+CAssetManager::CAssetManager() {
+    ma_engine_init(nullptr, &audioEngine);
+}
 
 CAssetManager::~CAssetManager() {
     threadManager.WaitAll(); 
     
+    audioCollection.clear();
+    
     meshCollection.Clear();
     textureCollection.Clear();
+    
+    ma_engine_uninit(&audioEngine);
 }
 
 void CAssetManager::LoadMesh(const string& meshName, const string& meshFilePath) {
@@ -62,6 +72,19 @@ void CAssetManager::UploadPendingTextures() {
     pendingTextures.Clear();
 }
 
+void CAssetManager::LoadAudio(const string& audioName, const string& audioFilePath) {
+    LoadAudioAsync(audioName, audioFilePath).wait();
+}
+
+future<void> CAssetManager::LoadAudioAsync(const string& audioName, const string& audioFilePath) {
+    return threadManager.Enqueue([this, audioName, audioFilePath] {
+        ma_sound* sound = new ma_sound();
+        ma_sound_init_from_file(&audioEngine, audioFilePath.c_str(), 0, nullptr, nullptr, sound);
+        lock_guard<mutex> lock(audioMutex);
+        audioCollection[audioName] = sound;
+    });
+}
+
 Mesh* CAssetManager::GetMesh(const string& meshName) {
     lock_guard<mutex> lock(meshMutex);
     auto it = meshCollection.find(meshName);
@@ -80,4 +103,14 @@ CTextureLoader* CAssetManager::GetTexture(const string& textureName) {
         return nullptr;
     }
     return it->value;
+}
+
+ma_sound* CAssetManager::GetAudio(const string& audioName) {
+    lock_guard<mutex> lock(audioMutex);
+    auto it = audioCollection.find(audioName);
+    if (it == audioCollection.end()) {
+        LOG_WARNING("Audio not found: " + audioName)
+        return nullptr;
+    }
+    return it->second;
 }

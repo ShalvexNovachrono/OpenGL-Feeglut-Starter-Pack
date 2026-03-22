@@ -6,7 +6,7 @@ A lightweight C++ starter template for OpenGL development using Freeglut. This p
   - `Renderer-Window.cpp/h`: The main window and rendering logic (`CRendererWindow` class).
   - `Maths.h`: Custom math library (Vectors, Lerp, etc.).
   - `Input-Manager.cpp/h`: Handles keyboard and mouse input (`CInputManager` class).
-  - `Asset-Manager.cpp/h`: Manages loading and retrieval of meshes and textures (`CAssetManager` class).
+  - `Asset-Manager.cpp/h`: Manages loading and retrieval of meshes, textures, and audio (`CAssetManager` class).
   - `Mesh-Loader.cpp/h`: Utility for loading 3D mesh data.
   - `Texture-Loader.cpp/h`: Utility for loading and managing OpenGL textures.
   - `Thread-Manager.cpp/h`: Manages a thread pool for asynchronous task execution (`CThreadManager` class).
@@ -56,7 +56,7 @@ void CRendererWindow::Draw() const {
 ## Features
 
 ### Asset Management (`CAssetManager`)
-The `CAssetManager` allows you to load and retrieve meshes and textures efficiently.
+The `CAssetManager` allows you to load and retrieve meshes, textures, and audio efficiently.
 
 **Loading Assets:**
 ```cpp
@@ -76,6 +76,37 @@ if (teapotMesh) {
 }
 if (brickTexture) {
     // Bind brickTexture
+}
+```
+
+**Audio Management:**
+The `CAssetManager` now supports loading and managing audio files using `miniaudio`.
+
+**Loading Audio:**
+You can load audio synchronously or asynchronously.
+```cpp
+// In Start() or a loading function
+// Synchronous loading
+assetManager->LoadAudio("background_music", "Assets/Audio/music.mp3");
+
+// Asynchronous loading
+std::future<void> audioLoadFuture = assetManager->LoadAudioAsync("sound_effect", "Assets/Audio/effect.wav");
+// You can do other things while the audio loads...
+// If you need to ensure it's loaded before use:
+audioLoadFuture.wait(); 
+```
+
+**Retrieving and Playing Audio:**
+```cpp
+// In Timer() or an event handler
+ma_sound* music = assetManager->GetAudio("background_music");
+if (music && !ma_sound_is_playing(music)) {
+    ma_sound_start(music);
+}
+
+ma_sound* effect = assetManager->GetAudio("sound_effect");
+if (effect) {
+    ma_sound_start(effect); // Play sound effect
 }
 ```
 
@@ -122,7 +153,7 @@ LOG_DEBUG("Calculated sum: " + to_string(result));
 ### Custom Containers (`CArray` & `CKeyValue`)
 Lightweight alternatives to STL containers:
 - **`CArray<T>`**: A dynamic array with `Append`, `RemoveAt`, and iterator support.
-- **`CKeyValue<K, V>`**: A simple dictionary/map implementation built on `CArray`. (not very fast for large collections)
+- **`CKeyValue<K, V>`**: An AVL tree-based key-value pair container, providing efficient logarithmic time complexity for insertions, deletions, and lookups.
 
 ### Math Library (`Maths.h`)
 The project includes a custom math library with support for:

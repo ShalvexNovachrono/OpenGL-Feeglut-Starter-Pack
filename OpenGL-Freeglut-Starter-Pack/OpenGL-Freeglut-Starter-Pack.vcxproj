@@ -144,11 +144,12 @@
   <ItemGroup>
     <ClInclude Include="Array.h" />
     <ClInclude Include="Asset-Manager.h" />
+    <ClInclude Include="miniaudio.h" />
     <ClInclude Include="Thread-Manager.h" />
     <ClInclude Include="File-Loader.h" />
     <ClInclude Include="Glut-Callbacks.h" />
     <ClInclude Include="Input-Manager.h" />
-    <ClInclude Include="KeyValue.h" />
+    <ClInclude Include="Key-Value.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Maths.h" />
     <ClInclude Include="Mesh-Loader.h" />

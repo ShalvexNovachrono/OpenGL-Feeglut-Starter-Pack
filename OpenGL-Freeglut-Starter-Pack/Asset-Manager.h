@@ -1,6 +1,6 @@
 #ifndef AssetManager
 #define AssetManager
-#include "KeyValue.h"
+#include "Key-Value.h"
 #include "main.h"
 #include "Mesh-Loader.h"
 #include "Thread-Manager.h"
@@ -17,19 +17,23 @@ private:
     mutex meshMutex;
     mutex textureMutex;
     mutex pendingMutex;
+    mutex audioMutex;
     
     CKeyValue<string, Mesh*> meshCollection;
     CKeyValue<string, CTextureLoader*> textureCollection;
     
     CArray<PendingTexture> pendingTextures;
     
+    ma_engine audioEngine;
+    unordered_map<string, ma_sound*> audioCollection;
+    
     CArray<thread> activeThreads;
     CThreadManager threadManager; 
 public:
     /// <summary>
-    /// Default constructor for CAssetManager.
+    /// Default constructor for CAssetManager. Initialise the engine in constructor
     /// </summary>
-    CAssetManager() = default;
+    CAssetManager();
 
     /// <summary>
     /// Destructor for CAssetManager. Cleans up allocated resources.
@@ -89,6 +93,20 @@ public:
     void UploadPendingTextures();
     
     /// <summary>
+    /// Loads an audio file synchronously.
+    /// </summary>
+    /// <param name="audioName">The name to associate with the loaded audio.</param>
+    /// <param name="audioFilePath">The file path of the audio to load.</param>
+    void LoadAudio(const string& audioName, const string& audioFilePath);
+    
+    /// <summary>
+    /// Loads an audio file asynchronously.
+    /// </summary>
+    /// <param name="audioName">The name to associate with the loaded audio.</param>
+    /// <param name="audioFilePath">The file path of the audio to load.</param>
+    future<void> LoadAudioAsync(const string& audioName, const string& audioFilePath);
+    
+    /// <summary>
     /// Retrieves a loaded mesh by its name.
     /// </summary>
     /// <param name="meshName">The name of the mesh to retrieve.</param>
@@ -101,6 +119,13 @@ public:
     /// <param name="textureName">The name of the texture to retrieve.</param>
     /// <returns>A pointer to the CTextureLoader object, or nullptr if not found.</returns>
     CTextureLoader* GetTexture(const string& textureName);
+    
+    /// <summary>
+    /// Retrieves a loaded audio by its name.
+    /// </summary>
+    /// <param name="audioName">The name of the audio to retrieve.</param>
+    /// <returns>A pointer to the ma_sound object, or nullptr if not found.</returns>
+    ma_sound* GetAudio(const string& audioName);
 };
 
 #endif
