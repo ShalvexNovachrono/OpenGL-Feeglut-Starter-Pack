@@ -90,6 +90,18 @@ public:
         Collection[CollectionSize] = value;
         CollectionSize++;
     }
+    
+    void Append(T&& value) {
+        if (ArrayCapacity == CollectionSize) {
+            Resize();
+        }
+        Collection[CollectionSize] = std::move(value);
+        CollectionSize++;
+    }
+    
+    T& back() {
+        return Collection[CollectionSize - 1];
+    }
 
     T& operator[](int index) {
         if (index < 0 || index >= CollectionSize)

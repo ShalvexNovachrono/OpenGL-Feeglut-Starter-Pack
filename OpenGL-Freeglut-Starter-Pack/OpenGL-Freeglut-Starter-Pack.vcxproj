@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Asset-Manager.cpp" />
+    <ClCompile Include="Thread-Manager.cpp" />
     <ClCompile Include="File-Loader.cpp" />
     <ClCompile Include="Glut-Callbacks.cpp" />
     <ClCompile Include="Input-Manager.cpp" />
@@ -143,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="Array.h" />
     <ClInclude Include="Asset-Manager.h" />
+    <ClInclude Include="Thread-Manager.h" />
     <ClInclude Include="File-Loader.h" />
     <ClInclude Include="Glut-Callbacks.h" />
     <ClInclude Include="Input-Manager.h" />

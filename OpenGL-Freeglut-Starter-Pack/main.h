@@ -17,6 +17,10 @@
 #include <functional>
 #include <algorithm>
 #include <Windows.h>
+#include <thread>
+#include <mutex>
+#include <queue>
+#include <future>
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include "GL/freeglut.h"

@@ -9,6 +9,7 @@ A lightweight C++ starter template for OpenGL development using Freeglut. This p
   - `Asset-Manager.cpp/h`: Manages loading and retrieval of meshes and textures (`CAssetManager` class).
   - `Mesh-Loader.cpp/h`: Utility for loading 3D mesh data.
   - `Texture-Loader.cpp/h`: Utility for loading and managing OpenGL textures.
+  - `Thread-Manager.cpp/h`: Manages a thread pool for asynchronous task execution (`CThreadManager` class).
   - `Array.h`: Custom dynamic array implementation (`CArray` class).
   - `KeyValue.h`: Custom key-value pair container (`CKeyValue` class).
   - `File-Loader.cpp/h`: Utility for reading file contents.
@@ -60,6 +61,12 @@ The `CAssetManager` allows you to load and retrieve meshes and textures efficien
 - `assetManager->GetMesh("name")`: Retrieve a loaded mesh.
 - `assetManager->LoadTexture("name", "path/to/image.png", width, height)`: Load a texture.
 - `assetManager->GetTexture("name")`: Retrieve a loaded texture.
+
+### Thread Management (`CThreadManager`)
+The `CThreadManager` provides a thread pool for asynchronous task execution, allowing you to offload heavy computations without blocking the main thread.
+- `CThreadManager threadManager;`: Create a thread pool (defaults to hardware concurrency).
+- `threadManager.Enqueue([]() { /* your task here */ });`: Enqueue a task to be executed.
+- `threadManager.WaitAll();`: Wait for all enqueued tasks to complete.
 
 ### Custom Containers (`CArray` & `CKeyValue`)
 Lightweight alternatives to STL containers:

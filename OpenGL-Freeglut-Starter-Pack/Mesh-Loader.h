@@ -23,8 +23,18 @@ struct Mesh {
 
 class CMeshLoader{
 public:
+    /// <summary>
+    /// Loads a mesh from a custom binary file format.
+    /// </summary>
+    /// <param name="filename">The path to the mesh file.</param>
+    /// <returns>A pointer to the loaded Mesh object, or nullptr if loading fails.</returns>
     static Mesh* LoadMesh(const string& filename);
     
+    /// <summary>
+    /// Loads a mesh from an OBJ file.
+    /// </summary>
+    /// <param name="filename">The path to the OBJ file.</param>
+    /// <returns>A pointer to the loaded Mesh object, or nullptr if loading fails.</returns>
     static Mesh* LoadMeshFromObj(const string& filename);
 };
 

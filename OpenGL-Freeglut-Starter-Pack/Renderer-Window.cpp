@@ -73,8 +73,8 @@ void CRendererWindow::CleanUp() {
 void CRendererWindow::Start() {
 	didTimerGetCalled = true;
 	
-	assetManager->LoadMeshFromObj("zombie", "./zombie.obj");
-	assetManager->LoadTexture("shrek", "./shrek5.jpg", 0, 0); 
+	/*assetManager->LoadMeshFromObjAsync("zombie", "./Assets/zombie.obj");
+	assetManager->LoadTextureAsync("shrek", "./Assets/shrek5.jpg", 0, 0); */
 	
 	worldPosition = Vec3(0.0f, -5.0f, -20.0f);
 	
@@ -128,7 +128,26 @@ void CRendererWindow::Draw() const {
 	glRotatef(worldRotation.z, 0, 0, 1);
 
 	// Render here
-	
+	Mesh* zombieMesh = assetManager->GetMesh("zombie");
+	//CTextureLoader* shrekTexture = assetManager->GetTexture("shrek");
+
+	/*if (zombieMesh != nullptr) {
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		glVertexPointer(3, GL_FLOAT, 0, zombieMesh->vertices);
+		glNormalPointer(GL_FLOAT, 0, zombieMesh->normals);
+		glTexCoordPointer(2, GL_FLOAT, 0, zombieMesh->texCoords);
+
+		glDrawElements(GL_TRIANGLES, zombieMesh->indexCount, GL_UNSIGNED_SHORT, zombieMesh->indices);
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_NORMAL_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	}*/
 	
 	//
 
